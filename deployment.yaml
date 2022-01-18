@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gpubsub-pull-gke
+  labels:
+    client: internal
+    version: 1.0.0
+    environtment: dev
+  annotations:
+      description: Practice Kubernetes Deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gpubsub-pull
+  template:
+    metadata:
+      name: gpubsub-pull-pod
+      labels:
+        app: gpubsub-pull
+    spec:
+      volumes:
+      - name: google-cloud-key
+        secret:
+          secretName: pub-sub-key
+      containers:
+        - name: gpubsub-pull
+          image: asia-south1-docker.pkg.dev/hbl-poc-digfac-anthos-prj/poc-pub-repo/gpubsub-pull-image:v1
+          volumeMounts:
+          - name: google-cloud-key
+            mountPath: /var/secrets/google
+          ports:
+            - containerPort: 8000
+          env:
+            - name: PUBSUB_PROJECT_ID
+              value: "hbl-poc-digfac-anthos-prj"
+            - name: PORT
+              value: "8000"
+            - name: PUBSUB_SUB_ID
+              value: "gpubsub-topic-sub"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/key.json

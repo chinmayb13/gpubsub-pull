@@ -1,0 +1,14 @@
+# The gpubsub-push-service service provides a load-balancing proxy over the gpubsub-pull
+# pods. By specifying the type as a 'LoadBalancer', Kubernetes Engine will
+# create an external HTTP load balancer.
+apiVersion: v1
+kind: Service
+metadata:
+  name: gpubsub-pull-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: gpubsub-pull
+  ports:
+  - port: 4050
+    targetPort: 8000

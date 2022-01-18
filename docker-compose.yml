@@ -1,0 +1,11 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  poc-pub:
+    build: .
+    ports:
+      - 7000:7000
+    expose:
+      - 7000
+    environment:
+      - PUBSUB_PROJECT_ID=poc-hdfc
+      - PUBSUB_SUB_ID=poc-subscriber
